@@ -23,4 +23,8 @@ Migrate project
     python manage.py migrate
 
 Run program
+    
     python manage.py runserver
+
+
+Developed by: Manuel Sandoval Arroyo, Juan Arturo Espejel Báez, Javier Belmont Zúñiga & Julián Humberto Reyes Ríos
