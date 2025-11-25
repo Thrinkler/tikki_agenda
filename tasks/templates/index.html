@@ -13,30 +13,20 @@
 <section class="section">
     <div class="container">
 
-        <!-- Header -->
         <div class="level">
             <div class="level-left">
                 <div>
-                    <h1 class="title">Task List</h1>
+                    <h1 class="title">TikiTiki Agenda</h1>
                     <p class="subtitle is-6">
-                        Manage your tasks, priorities and tags.
+                        The best agenda... for the TikiTiki island.
                     </p>
                 </div>
             </div>
-            <div class="level-right">
-                <nav class="breadcrumb is-small" aria-label="breadcrumbs">
-                    <ul>
-                        <li class="is-active"><a>Tasks</a></li>
-                    </ul>
-                </nav>
-            </div>
         </div>
 
-        <!-- Toolbar / Utilities (GET form for filtering/search) -->
         <div class="box">
             <form method="get" class="columns is-multiline is-vcentered">
 
-                <!-- Search -->
                 <div class="column is-12-tablet is-4-desktop">
                     <div class="field">
                         <label class="label is-small">Search</label>
@@ -51,15 +41,14 @@
                     </div>
                 </div>
 
-                <!-- Status filter -->
-                <div class="column is-6-tablet is-2-desktop">
+                <div class="column is-6 -tablet is-2-desktop">
                     <div class="field">
                         <label class="label is-small">Status</label>
                         <div class="control">
                             <div class="select is-small is-fullwidth">
                                 <select name="status">
                                     <option value="">All</option>
-                                    <option value="open" {% if request.GET.status == "open" %}selected{% endif %}>Open</option>
+                                    <option value="open" {% if request.GET.status == "open" %}selected{% endif %}>Not completed</option>
                                     <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Completed</option>
                                 </select>
                             </div>
@@ -67,7 +56,6 @@
                     </div>
                 </div>
 
-                <!-- Priority filter -->
                 <div class="column is-6-tablet is-2-desktop">
                     <div class="field">
                         <label class="label is-small">Min. Priority</label>
@@ -85,7 +73,6 @@
                     </div>
                 </div>
 
-                <!-- Sort -->
                 <div class="column is-6-tablet is-2-desktop">
                     <div class="field">
                         <label class="label is-small">Sort by</label>
@@ -103,22 +90,6 @@
                     </div>
                 </div>
 
-                <!-- Show completed toggle -->
-                <div class="column is-6-tablet is-2-desktop">
-                    <div class="field">
-                        <label class="label is-small">Completed</label>
-                        <div class="control">
-                            <label class="checkbox is-small">
-                                <input type="checkbox" name="hide_completed"
-                                       value="1"
-                                    {% if request.GET.hide_completed == "1" %}checked{% endif %}>
-                                Hide completed
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions -->
                 <div class="column is-12-tablet is-4-desktop has-text-right">
                     <div class="field is-grouped is-grouped-right is-grouped-multiline">
                         <p class="control">
@@ -137,7 +108,6 @@
                                 <span>Reset</span>
                             </a>
                         </p>
-                        {# Optional: link to task creation view if you have one #}
                         <p class="control">
                             <a href="{% url 'create_task' %}" class="button is-primary is-small">
                                 <span class="icon is-small"><i class="fas fa-plus"></i></span>
@@ -151,7 +121,6 @@
 
         <div class="columns">
 
-            <!-- Main task list -->
             <div class="column is-9">
                 {% if tasks %}
                     {% for task in tasks %}
@@ -179,7 +148,6 @@
                                             </p>
                                         {% endif %}
 
-                                        <!-- Tags -->
                                         {% if task.tags.all %}
                                             <div class="tags">
                                                 {% for tag in task.tags.all %}
@@ -196,7 +164,6 @@
                                 <div class="level-right">
                                     <div class="has-text-right">
 
-                                        <!-- Date -->
                                         <p class="is-size-7 has-text-grey">
                                             {% if task.date %}
                                                 <span class="icon is-small">
@@ -210,7 +177,6 @@
                                             {% endif %}
                                         </p>
 
-                                        <!-- Priority badge -->
                                         <p class="mt-2">
                                             
                                             {% with task.priority|default:3 as pr %}
@@ -272,16 +238,16 @@
                 {% endif %}
             </div>
 
-            <!-- Side utilities -->
             <div class="column is-3">
 
-                <!-- Quick stats (basic, uses only tasks|length) -->
                 <div class="box">
                     <p class="title is-6">Overview</p>
-                    <p class="is-size-7">Total tasks: <strong>{{ tasks|length }}</strong></p>
+                    <p class="is-size-7">Completed tasks: <strong>{{ completed_tasks }} / {{ total_tasks }}</strong></p>
+                    <progress class="progress is-small is-info" value="{{ percentage }}" max="100">
+                        Loading…
+                    </progress>
                 </div>
 
-                <!-- Legend -->
                 <div class="box">
                     <p class="title is-6">Legend</p>
                     <div class="content is-size-7">

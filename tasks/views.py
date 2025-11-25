@@ -6,24 +6,27 @@ from django.db.models import Q
 
 def index(request):
     tasks = Task.objects.all()
+    total_tasks_num = tasks.count()
+    completed_tasks_num = tasks.filter(completed = True).count()
+
+    percentage =int(100* completed_tasks_num/total_tasks_num) if completed_tasks_num > 0 else 0
+   
     search_query = request.GET.get('q')
     if search_query:
         tasks = tasks.filter(
             Q(title__icontains=search_query) | 
             Q(description__icontains=search_query)
         )
+
     status_filter = request.GET.get('status')
     if status_filter == 'open':
-        tasks = tasks.filter(completed=False)
+        tasks = tasks.filter(completed = False)
     elif status_filter == 'completed':
-        tasks = tasks.filter(completed=True)
+        tasks = tasks.filter(completed = True)
     min_priority = request.GET.get('min_priority')
     if min_priority:
         tasks = tasks.filter(priority__gte=min_priority)
 
-    hide_completed = request.GET.get('hide_completed')
-    if hide_completed == '1' and status_filter != 'completed':
-        tasks = tasks.filter(completed=False)
     order = request.GET.get('order')
     match order:
         case "date":
@@ -37,7 +40,10 @@ def index(request):
         case _:
             tasks = tasks.order_by('-date')
 
-    context = {"tasks": tasks}
+    context = {"tasks": tasks,
+               "percentage": percentage,
+               "total_tasks": total_tasks_num,
+               "completed_tasks": completed_tasks_num}
     return render(request, "index.html", context)
 
 
